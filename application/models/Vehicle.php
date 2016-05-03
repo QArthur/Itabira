@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 class Application_Model_Vehicle
 {
@@ -1767,9 +1767,9 @@ class Application_Model_Vehicle
 		$select = $vehicle->select()->setIntegrityCheck(false);
 		$select	->from(array('v' => 'vehicle'),array('start_date' => new Zend_Db_Expr ('DATE_FORMAT(start_date,"%d/%m/%Y")'),
 																						'service', 'plate', 'renavam', 'pattern', 'color', 'type', 'floor') )
-						->joinInner(array('m' => 'vehicle_mechanics'),'m.id=v.id')
-						->joinInner(array('me' => 'vehicle_measures'),'me.id=v.id')
-						->joinInner(array('mo' => 'vehicle_other'),'mo.id=v.id', array(
+						->joinLeft(array('m' => 'vehicle_mechanics'),'m.id=v.id')
+						->joinLeft(array('me' => 'vehicle_measures'),'me.id=v.id')
+						->joinLeft(array('mo' => 'vehicle_other'),'mo.id=v.id', array(
 															'elevator_date' => new Zend_Db_Expr ('DATE_FORMAT(elevator_date,"%d/%m/%Y")'),
 															'seal_date' => new Zend_Db_Expr ('DATE_FORMAT(seal_date,"%d/%m/%Y")') ,
 															'insurer_date'  => new Zend_Db_Expr ('DATE_FORMAT(insurer_date,"%d/%m/%Y")'),
@@ -1779,17 +1779,18 @@ class Application_Model_Vehicle
 						->joinInner(array('c' => 'consortium'),'c.id=vh.consortium',array('consortium_name' => 'name'))
 						->joinInner(array('co' => 'consortium_companies'),'co.id=vh.consortium_company',array('cell_name' => 'name'))
 						->joinInner(array('com' => 'company'),'com.id=co.company',array('company_name' => 'company'))
-						->joinInner(array('col' => 'vehicle_color'),'col.id=v.color',array('color_name' => 'name'))
-						->joinInner(array('pat' => 'vehicle_pattern'),'pat.id=v.pattern',array('pattern_name' => 'name'))
-						->joinInner(array('vch' => 'vehicle_chassi'),'vch.id=m.chassi_model',array('model_chassi_name' => 'name'))
-						->joinInner(array('vmo' => 'vehicle_motor'),'vmo.id=m.motor_localization',array('motor_localization_name' => 'name'))
-						->joinInner(array('vbo' => 'vehicle_body'),'vbo.id=m.body_model',array('body_model_name' => 'name'))
-						->joinInner(array('vsu' => 'vehicle_suspension'),'vsu.id=m.suspension',array('suspension_name' => 'name'))
-						->joinInner(array('vca' => 'vehicle_cambium'),'vca.id=m.cambium',array('cambium_name' => 'name'))
-						->joinInner(array('vse' => 'vehicle_seat'),'vse.id=m.seat_type',array('seat_name' => 'name'))
-						->joinInner(array('vty' => 'vehicle_type'),'vty.id=v.type',array('type_name' => 'name'))
-						->joinInner(array('vsv' => 'vehicle_service'),'vsv.id=v.service',array('service_name' => 'name'))
-						->order('vh.external_number');
+						->joinLeft(array('col' => 'vehicle_color'),'col.id=v.color',array('color_name' => 'name'))
+						->joinLeft(array('pat' => 'vehicle_pattern'),'pat.id=v.pattern',array('pattern_name' => 'name'))
+						->joinLeft(array('vch' => 'vehicle_chassi'),'vch.id=m.chassi_model',array('model_chassi_name' => 'name'))
+						->joinLeft(array('vmo' => 'vehicle_motor'),'vmo.id=m.motor_localization',array('motor_localization_name' => 'name'))
+						->joinLeft(array('vbo' => 'vehicle_body'),'vbo.id=m.body_model',array('body_model_name' => 'name'))
+						->joinLeft(array('vsu' => 'vehicle_suspension'),'vsu.id=m.suspension',array('suspension_name' => 'name'))
+						->joinLeft(array('vca' => 'vehicle_cambium'),'vca.id=m.cambium',array('cambium_name' => 'name'))
+						->joinLeft(array('vse' => 'vehicle_seat'),'vse.id=m.seat_type',array('seat_name' => 'name'))
+						->joinLeft(array('vty' => 'vehicle_type'),'vty.id=v.type',array('type_name' => 'name'))
+						->joinLeft(array('vsv' => 'vehicle_service'),'vsv.id=v.service',array('service_name' => 'name'))
+						->order('vh.external_number')
+						->where('vh.end_historic_date is NULL');
 		return $vehicle->fetchAll($select);
 	}
 
@@ -1799,9 +1800,9 @@ class Application_Model_Vehicle
 		$select = $vehicle->select()->setIntegrityCheck(false);
 		$select	->from(array('v' => 'vehicle'),array('start_date' => new Zend_Db_Expr ('DATE_FORMAT(start_date,"%d/%m/%Y")'),
 																						'service', 'plate', 'renavam', 'pattern', 'color', 'type', 'floor') )
-						->joinInner(array('m' => 'vehicle_mechanics'),'m.id=v.id')
-						->joinInner(array('me' => 'vehicle_measures'),'me.id=v.id')
-						->joinInner(array('mo' => 'vehicle_other'),'mo.id=v.id', array(
+						->joinLeft(array('m' => 'vehicle_mechanics'),'m.id=v.id')
+						->joinLeft(array('me' => 'vehicle_measures'),'me.id=v.id')
+						->joinLeft(array('mo' => 'vehicle_other'),'mo.id=v.id', array(
 															'elevator_date' => new Zend_Db_Expr ('DATE_FORMAT(elevator_date,"%d/%m/%Y")'),
 															'seal_date' => new Zend_Db_Expr ('DATE_FORMAT(seal_date,"%d/%m/%Y")') ,
 															'insurer_date'  => new Zend_Db_Expr ('DATE_FORMAT(insurer_date,"%d/%m/%Y")'),
@@ -1811,16 +1812,16 @@ class Application_Model_Vehicle
 						->joinInner(array('c' => 'consortium'),'c.id=vh.consortium',array('consortium_name' => 'name'))
 						->joinInner(array('co' => 'consortium_companies'),'co.id=vh.consortium_company',array('cell_name' => 'name'))
 						->joinInner(array('com' => 'company'),'com.id=co.company',array('company_name' => 'company'))
-						->joinInner(array('col' => 'vehicle_color'),'col.id=v.color',array('color_name' => 'name'))
-						->joinInner(array('pat' => 'vehicle_pattern'),'pat.id=v.pattern',array('pattern_name' => 'name'))
-						->joinInner(array('vch' => 'vehicle_chassi'),'vch.id=m.chassi_model',array('model_chassi_name' => 'name'))
-						->joinInner(array('vmo' => 'vehicle_motor'),'vmo.id=m.motor_localization',array('motor_localization_name' => 'name'))
-						->joinInner(array('vbo' => 'vehicle_body'),'vbo.id=m.body_model',array('body_model_name' => 'name'))
-						->joinInner(array('vsu' => 'vehicle_suspension'),'vsu.id=m.suspension',array('suspension_name' => 'name'))
-						->joinInner(array('vca' => 'vehicle_cambium'),'vca.id=m.cambium',array('cambium_name' => 'name'))
-						->joinInner(array('vse' => 'vehicle_seat'),'vse.id=m.seat_type',array('seat_name' => 'name'))
-						->joinInner(array('vty' => 'vehicle_type'),'vty.id=v.type',array('type_name' => 'name'))
-						->joinInner(array('vsv' => 'vehicle_service'),'vsv.id=v.service',array('service_name' => 'name'))
+						->joinLeft(array('col' => 'vehicle_color'),'col.id=v.color',array('color_name' => 'name'))
+						->joinLeft(array('pat' => 'vehicle_pattern'),'pat.id=v.pattern',array('pattern_name' => 'name'))
+						->joinLeft(array('vch' => 'vehicle_chassi'),'vch.id=m.chassi_model',array('model_chassi_name' => 'name'))
+						->joinLeft(array('vmo' => 'vehicle_motor'),'vmo.id=m.motor_localization',array('motor_localization_name' => 'name'))
+						->joinLeft(array('vbo' => 'vehicle_body'),'vbo.id=m.body_model',array('body_model_name' => 'name'))
+						->joinLeft(array('vsu' => 'vehicle_suspension'),'vsu.id=m.suspension',array('suspension_name' => 'name'))
+						->joinLeft(array('vca' => 'vehicle_cambium'),'vca.id=m.cambium',array('cambium_name' => 'name'))
+						->joinLeft(array('vse' => 'vehicle_seat'),'vse.id=m.seat_type',array('seat_name' => 'name'))
+						->joinLeft(array('vty' => 'vehicle_type'),'vty.id=v.type',array('type_name' => 'name'))
+						->joinLeft(array('vsv' => 'vehicle_service'),'vsv.id=v.service',array('service_name' => 'name'))
 						->order('vh.external_number');
 		return $vehicle->fetchAll($select);
 	}
