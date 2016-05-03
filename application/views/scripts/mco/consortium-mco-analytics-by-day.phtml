@@ -1,0 +1,45 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+	  	<div class="list-group">
+	  		<a href="/mco" class="list-group-item">
+	  			<h4 class="list-group-item-heading">MCO</h4>
+    				<p class="list-group-item-text">Gerencie aqui os dados dos MCO's</p>
+	  		</a>
+			  <a href="/mco/consortium-mco-journey-change/id/<?=$this->mcoId?>/date/<?=$this->date?>" class="list-group-item"><span class="glyphicon glyphicon-inbox"></span> Alteração de Viagem</a>
+			  <?$mcoData = new Application_Model_DbTable_Mco();
+	          	$lockDay = $mcoData->fetchRow($mcoData->select()->where('id = ?',$this->mcoId));
+	          	if($lockDay->lock_day ==1){?>
+	           		<a href="/mco/consortium-mco-main-new-lost-log/id/<?=$this->mcoId?>/date/<?=$this->date?>" class="list-group-item"><span class="fa fa-bookmark"></span> Perda de Log</a>
+	          <?}?>
+			</div>
+		</div>
+    <div class="col-md-9">
+      <ol class="breadcrumb">
+        <li><a href="/dashboard">Página inicial</a></li>
+        <li><a href="/mco/">MCO</a></li>
+        <li><a href="/mco/view">Pesquisa</a></li>
+        <li class="active">Análise</li>
+      </ol> 
+      <div class="page-header">
+        <h1>MCO <?=str_ireplace("-", "/",$this->date)?><small> dados da bilhetagem eletrônica</small></h1>
+        <hr>
+        <div class="row-fluid">
+	        <div class="span6 well">
+	          <h2>Alteração de Viagem</h2>
+	          <p>Gerenciar as alterções de viagem.</p>
+	          <p><a href="/mco/consortium-mco-journey-change/id/<?=$this->mcoId?>/date/<?=$this->date?>" class="btn btn-default">Alteração de Viagem</a></p>
+	        </div>
+	        <?if($lockDay->lock_day ==1){?>
+		        <div class="span6 well">
+		          <h2>Perda de Log</h2>
+		          <p>Cadastrar e alterar as perdas de log.</p>
+		          <p><a href="/mco/consortium-mco-main-new-lost-log/id/<?=$this->mcoId?>/date/<?=$this->date?>" class="btn btn-default">gerenciar perdas de log</a></p>
+		        </div>
+	      <?}?>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

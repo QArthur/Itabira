@@ -1,0 +1,139 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3">
+      <div class="list-group">
+        <a href="/used-fleet" class="list-group-item">
+          <h4 class="list-group-item-heading">Frota Empenhada</h4>
+            <p class="list-group-item-text">Acesso aos dados dos veículos utilizados</p>
+        </a> 
+        <a href="/used-fleet/view" class="list-group-item"><i class="fa fa-search"></i> Pesquisar</a>
+        <a href="/used-fleet/report" class="list-group-item active"><span class="glyphicon glyphicon-list-alt"></span> Relatórios</a>
+      </div>
+    </div>
+    <div class="span9">
+      <ol class="breadcrumb">
+        <li><a href="/dashboard">Página inicial</a></li>
+        <li><a href="/monitoring">Fiscalização</a></li>
+        <li><a href="/used-fleet">Frota Empenhada</a></li>
+        <li class="active">Relatório</li>
+      </ol>
+       <div class="span5 well">
+          <div class="panel-heading">
+            <div class="panel-title">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#empenho_geral">
+              <h2>Empenho Geral</h2></a>
+              <p>Número total de veículos empenhados.</p>
+              <div id= "empenho_geral"class="panel-collapse collapse">
+                <h5 style= "color:grey">Total de veículos empenhados no sistema no período informado</h5>
+                <form class="form-inline" action="/used-fleet/report-general" method="get" role="form">
+                  <table>
+                    <tr>
+                      <label> Período</label>
+                      <td>
+                        <input class="dateMask form-control" type="text" id="data" name="data_ini" placeholder="Data de início"><br><br>
+                      </td>  
+                      <td>
+                        <input class="dateMask form-control" type="text" id="data" name="data_fim" placeholder="Data de fim"><br><br>
+                      </td>  
+                    </tr>
+                  </table>
+                  <table>
+                    <tr>
+                      <label>Pico da Manhã</label>
+                      <td>                        
+                        <input class="hour form-control" type="text" id="hora" name="hora_ini_m" placeholder="Hora de inicio"><br><br>
+                      </td>  
+                      <td>
+                        <input class="hour form-control" type="text" id="hora" name="hora_fim_m" placeholder="Hora de fim"><br><br>
+                      </td>  
+                    </tr>
+                  </table>
+                  <table>
+                    <tr>
+                      <label>Pico da Tarde</label>
+                      <td>                        
+                        <input class="hour form-control" type="text" id="hora" name="hora_ini_t" placeholder="Hora de inicio"><br><br>
+                      </td>  
+                      <td>
+                        <input class="hour form-control" type="text" id="hora" name="hora_fim_t" placeholder="Hora de fim"><br><br>
+                      </td>  
+                    </tr>
+                  </table>
+                  <button type="submit" id='G1' name='report' class="btn btn-primary" value="0">Gerar relatório</button>
+                  <button type="submit" id='G2' name='report' class="btn btn-primary" value="1">Exportar xls</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="span5 well">
+          <div class="panel-heading">
+            <div class="panel-title">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#empenho_rit">
+              <h2>Empenho por RIT</h2></a>
+              <p>Número total de veículos empenhados por RIT.</p>
+              <div id= "empenho_rit"class="panel-collapse collapse">
+                <h5 style= "color:grey">Total de veículos empenhados no sistema no período informado por RIT</h5>
+                <form class="form-inline" action="/used-fleet/report-rit" method="get" role="form">
+                  <table>
+                    <tr>
+                      <label> Período</label>
+                      <td>
+                        <input class="dateMask form-control" type="text" id="data" name="data_ini" placeholder="Data de início"><br><br>
+                      </td>  
+                      <td>
+                        <input class="dateMask form-control" type="text" id="data" name="data_fim" placeholder="Data de fim"><br><br>
+                      </td>  
+                    </tr>
+                  </table>
+                  <table>
+                    <tr>
+                      <label>Pico da Manhã</label>
+                      <td>                        
+                        <input class="hour form-control" type="text" id="hora" name="hora_ini_m" placeholder="Hora de inicio"><br><br>
+                      </td>  
+                      <td>
+                        <input class="hour form-control" type="text" id="hora" name="hora_fim_m" placeholder="Hora de fim"><br><br>
+                      </td>  
+                    </tr>
+                  </table>
+                  <table>
+                    <tr>
+                      <label>Pico da Tarde</label>
+                      <td>                        
+                        <input class="hour form-control" type="text" id="hora" name="hora_ini_t" placeholder="Hora de inicio"><br><br>
+                      </td>  
+                      <td>
+                        <input class="hour form-control" type="text" id="hora" name="hora_fim_t" placeholder="Hora de fim"><br><br>
+                      </td>  
+                    </tr>
+                  </table>
+                  <button type="submit" id='G1' name='report' class="btn btn-primary" value="0">Gerar relatório</button>
+                  <button type="submit" id='G2' name='report' class="btn btn-primary" value="1">Exportar xls</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="span5 well">
+          <div class="panel-heading">
+            <div class="panel-title">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#empenho_empresa">
+              <h2>Empenho por Empresa</h2></a>
+              <p>Número total de veículos empenhados por empresa.</p>
+              <div id= "empenho_empresa"class="panel-collapse collapse">
+                <h5 style= "color:grey">Total de veículos empenhados no sistema no período informado por RIT</h5>
+                <form class="form-inline" action="/mco/report-hour-production" method="get" role="form">
+                  <label> Data Inicio</label>
+                  <input class="dateMask form-control" type="text" id="data" name="data_ini" placeholder="Digite a data de inicio"><br><br>
+                  <label> Data Fim</label>
+                  <input class="dateMask form-control" type="text" id="data" name="data_fim" placeholder="Digite a data de de fim"><br><br>
+                  <button type="submit" id='report_pdf' name='report' class="btn btn-primary" value="0">Gerar relatório</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

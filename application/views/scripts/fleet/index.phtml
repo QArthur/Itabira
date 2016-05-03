@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="list-group">
+        <a href="/fleet" class="list-group-item">
+          <h4 class="list-group-item-heading">Frota</h4>
+            <p class="list-group-item-text">Gerencie aqui os dados da frota</p>
+        </a>
+        <?$authNamespace = new Zend_Session_Namespace('userInformation');
+          $institution = $authNamespace->institution;
+          if($institution != 1){?>
+        <a href="/fleet/new" class="list-group-item"><i class="fa fa-pencil"></i> Novo</a>
+        <?}?>
+        <a href="/fleet/view" class="list-group-item"><i class="fa fa-search"></i> Pesquisar</a>
+        <?if($institution == 1){?>
+        <a href="/fleet/report" class="list-group-item"><span class="glyphicon glyphicon-list-alt"></span> Relatórios</a>
+        <a href="/fleet/review-add" class="list-group-item"><span class="glyphicon glyphicon-check"></span> Pedidos de cadastro <?if($this->vehiclesReviewedAdd){?><span class="badge"><?=$this->vehiclesReviewedAdd?></span><?}?></a>
+        <a href="/fleet/review" class="list-group-item"><span class="glyphicon glyphicon-check"></span> Cadastros realizados <?if($this->vehiclesReviewed){?><span class="badge"><?=$this->vehiclesReviewed?></span><?}?></a>
+        <a href="/fleet/review-crv" class="list-group-item"><i class="fa fa-file"></i> Segunda via CRV <?if($this->vehiclesAskedCrv){?><span class="badge"><?=$this->vehiclesAskedCrv?></span><?}?></a>
+        <a href="/fleet/review-down" class="list-group-item"><i class="fa fa-trash"></i> Veículos baixados <?if($this->vehiclesDown){?><span class="badge"><?=$this->vehiclesDown?></span><?}?></a>
+          <?}?>
+          <?if($this->institution == 3){?>
+        <a href="/fleet/process" class="list-group-item"><span class="glyphicon glyphicon-list-alt"></span> Veículos em processo</a>
+          <?}?>
+          <?if($this->institution == 4){?>
+            <a href="/fleet/report" class="list-group-item"><span class="glyphicon glyphicon-list-alt"></span> Relatórios</a>
+          <?}?>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <ol class="breadcrumb">
+        <li><a href="/dashboard">Página inicial</a></li>
+        <li class="active">Frota</li>
+      </ol>  
+      <div class="jumbotron">
+        <h1>Frota</h1>
+        <p class="lead">A frota de ônibus do transporte é constituída de todos os veículos, previamente vistoriados, capazes de transportar passageiros.</p>
+      </div>
+      <div class="text-center">
+        <img src='/img/onibus-itabira.jpg' class="img-responsive img-thumbnail"><br><br>
+      </div>
+     </div>
+    </div>
+  </div>

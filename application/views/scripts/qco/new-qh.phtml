@@ -1,0 +1,309 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="list-group">
+        <a href="/qco" class="list-group-item">
+          <h4 class="list-group-item-heading">QCO</h4>
+            <p class="list-group-item-text">Gerencie aqui os dados das QCOs</p>
+        </a>
+        <a href="/qco/new" class="list-group-item"><i class="fa fa-pencil"></i> Novo</a>
+        <a href="#" class="list-group-item active"> Edição</a>
+        <a href="/qco/view" class="list-group-item"><i class="fa fa-search"></i> Pesquisar</a>
+        <a href="/qco/export" class="list-group-item"><i class="fa fa-share"></i> Exportar</a>
+        <a href="/qco/report" class="list-group-item"><span class="glyphicon glyphicon-list-alt"></span> Relatórios</a>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <ol class="breadcrumb">
+        <li><a href="/dashboard">Página inicial</a></li>
+        <li><a href="/qco">QCO</a></li>
+        <li class="active">Edição</li>
+      </ol> 
+      <div class="page-header">
+        <h1>Alterações no QCO <small>visualize as alterações</small></h1>
+        <hr>
+        <ul class="nav nav-tabs" id="myTab">
+         	<li id="prin" class="active"><a href="#data">Horários</a></li>
+          <li><a href="#fleet">Frota</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="data">
+            <br>
+            <div class="panel-group" id="accordion">
+              <?$typeDayIds = array();?>
+			        <?foreach ($this->qh['qh'] as $qh) {?>
+            		<?$qcoScheduleHour = new Application_Model_DbTable_QcoScheduleHour();
+                        $select = $qcoScheduleHour->select()->setIntegrityCheck(false);
+                        $select ->from(array('q' => 'qco_schedule_hour'), array('hour_formatted' => 'TIME_FORMAT(hour,"%H:%i")'))
+                                ->joinInner(array('qs' => 'qco_schedule'),'qs.id=q.qco_schedule_id')
+                                ->joinInner(array('qt' => 'qco_type_journey'),'qt.id=q.type_journey_id',array('abrev'))
+                                ->where('qs.qco_id = ?',$this->qcoId)
+                                ->where('qs.type_day_id = ?',$qh['id'])
+                                ->order('hour');
+                        $qcoScheduleHourRow = $qcoScheduleHour->fetchAll($select);?>
+
+								<div class="panel panel-default">
+	                <div class="panel-heading">
+	                  <h4 class="panel-title">
+	                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#qcoHour_<?=$qh['id']?>"><?=$qh['name']?></a>
+	                  </h4>
+	                </div>
+	                <div class="panel-collapse collapse" id="qcoHour_<?=$qh['id']?>">
+	                  <div class="panel-body">
+	                  	<?foreach ($qh['qh'] as $hour) {
+	                  		$hasHour = 0;
+	                  		if(count($qcoScheduleHourRow)){
+	                  			foreach ($qcoScheduleHourRow as $qcoRow) {
+	                  				if($qcoRow->hour_formatted == substr($hour['hour'], 0, 2).':'.substr($hour['hour'], 2)){
+	                  					$hasHour = 1;
+	                  				}
+	                  			}
+	                  		}
+	                  		?>
+	                  		<div class="input-group col-xs-2 <?if($hasHour) echo 'has-warning'; else echo 'has-success';?>">
+                          <input type="text" class="form-control" value="<?=substr($hour['hour'], 0, 2).':'.substr($hour['hour'], 2)?>" disabled="disabled">
+                          <span class="input-group-addon"><?=$hour['type']?></span>
+                        </div>
+	                  	<?}?>
+	                  </div>
+                    <div class="panel-body">
+                      <div class="col-md-2">
+                        <h4>Horários removidos</h4>
+                      </div>
+                      <?if(count($qcoScheduleHourRow)){
+                        foreach ($qcoScheduleHourRow as $qcoRow) {
+                          $hasHour = 0;
+                          foreach ($qh['qh'] as $hour) {
+                            if($qcoRow->hour_formatted == substr($hour['hour'], 0, 2).':'.substr($hour['hour'], 2)){
+                              $hasHour = 1;
+                            }
+                          }?>
+                        <?if(!$hasHour){?>
+                          <div class="input-group col-xs-2 has-error">
+                            <input type="text" class="form-control" value="<?=$qcoRow->hour_formatted?>" disabled="disabled">
+                            <span class="input-group-addon"><?=$qcoRow->abrev?></span>
+                          </div>
+                        <?}?>
+                      <?}}?>
+                    </div>
+	                </div>
+               	</div>
+							<?array_push($typeDayIds,$qh['id']);unset($qcoScheduleHourRow);unset($qcoScheduleHour);}?>
+              <?$qcoSchedule = new Application_Model_DbTable_QcoSchedule();
+              $select = $qcoSchedule->select()->setIntegrityCheck(false);
+              $select ->from(array('q' => 'qco_schedule'))
+                      ->joinInner(array('qs' => 'qco_type_day'),'qs.id=q.type_day_id',array('type_day_name' => 'name'))
+                      ->where('q.qco_id = ?',$this->qcoId)
+                      ->where('q.type_day_id NOT IN (?)',$typeDayIds);
+              $qcoScheduleRow = $qcoSchedule->fetchAll($select);
+              foreach ($qcoScheduleRow as $schedule) {?>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#qcoHour_<?=$schedule->type_day_id?>"><?=$schedule->type_day_name?></a>
+                    </h4>
+                  </div>
+                  <div class="panel-collapse collapse" id="qcoHour_<?=$schedule->type_day_id?>">
+                    <div class="panel-body">
+                      <?$qcoScheduleHour = new Application_Model_DbTable_QcoScheduleHour();
+                        $select = $qcoScheduleHour->select()->setIntegrityCheck(false);
+                        $select ->from(array('q' => 'qco_schedule_hour'), array('hour_formatted' => 'TIME_FORMAT(hour,"%H:%i")'))
+                                ->joinInner(array('qs' => 'qco_schedule'),'qs.id=q.qco_schedule_id')
+                                ->joinInner(array('qt' => 'qco_type_journey'),'qt.id=q.type_journey_id',array('abrev'))
+                                ->where('qs.qco_id = ?',$this->qcoId)
+                                ->where('qs.type_day_id = ?',$schedule->type_day_id)
+                                ->order('hour');
+                        $qcoScheduleHourRow = $qcoScheduleHour->fetchAll($select);
+                        foreach ($qcoScheduleHourRow as $qcoSchedule) {?>
+                        <div class="input-group col-xs-2 has-warning">
+                          <input type="text" class="form-control" value="<?=$qcoSchedule->hour_formatted?>" disabled="disabled">
+                          <span class="input-group-addon"><?=$qcoSchedule->abrev?></span>
+                        </div>
+                        <?}?>
+                    </div>
+                  </div>
+                </div>
+              <?}?>
+            </div>
+					</div>
+					<div class="tab-pane" id="fleet">
+            <br>
+            <div class="panel-group" id="accordion">
+              <?foreach ($this->qh['fleet'] as $fleet) {
+                $qcoTypeDay = new Application_Model_DbTable_QcoTypeDay();
+                $qcoTypeDayRow = $qcoTypeDay->fetchRow($qcoTypeDay->select()->where('id = ?', $fleet['type_day_id']));
+                ?>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#qcoFleet_<?=$fleet['type_day_id']?>"><?=$qcoTypeDayRow->name?></a>
+                  </h4>
+                </div>
+                <div class="panel-collapse collapse" id="qcoFleet_<?=$fleet['type_day_id']?>">
+                  <div class="panel-body">
+                    <strong>Frota antiga</strong>
+                    <table border="1" class="table table-bordered">
+                      <th>00</th>
+                      <th>01</th>
+                      <th>02</th>
+                      <th>03</th>
+                      <th>04</th>
+                      <th>05</th>
+                      <th>06</th>
+                      <th>07</th>
+                      <th>08</th>
+                      <th>09</th>
+                      <th>10</th>
+                      <th>11</th>
+                      <th>12</th>
+                      <th>13</th>
+                      <th>14</th>
+                      <th>15</th>
+                      <th>16</th>
+                      <th>17</th>
+                      <th>18</th>
+                      <th>19</th>
+                      <th>20</th>
+                      <th>21</th>
+                      <th>22</th>
+                      <th>23</th>
+                      <tr>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['00'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['01'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['02'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['03'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['04'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['05'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['06'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['07'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['08'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['09'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['10'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['11'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['12'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['13'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['14'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['15'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['16'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['17'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['18'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['19'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['20'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['21'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['22'],10)?>"></td>
+                        <td><input type="text" style="width: 18px;" value="<?=intval($fleet['23'],10)?>"></td>
+                      </tr>
+                    </table>
+                    <strong>Frota nova</strong>
+                    <?foreach($this->qcoFleet as $qcoFleet){
+                      if($qcoFleet->type_day_id == $fleet['type_day_id']){?>
+                      <table border="1" class="table table-bordered">
+                        <th>00</th>
+                        <th>01</th>
+                        <th>02</th>
+                        <th>03</th>
+                        <th>04</th>
+                        <th>05</th>
+                        <th>06</th>
+                        <th>07</th>
+                        <th>08</th>
+                        <th>09</th>
+                        <th>10</th>
+                        <th>11</th>
+                        <th>12</th>
+                        <th>13</th>
+                        <th>14</th>
+                        <th>15</th>
+                        <th>16</th>
+                        <th>17</th>
+                        <th>18</th>
+                        <th>19</th>
+                        <th>20</th>
+                        <th>21</th>
+                        <th>22</th>
+                        <th>23</th>
+                        <tr>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_00?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_01?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_02?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_03?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_04?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_05?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_06?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_07?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_08?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_09?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_10?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_11?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_12?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_13?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_14?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_15?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_16?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_17?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_18?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_19?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_20?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_21?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_22?>"></td>
+                          <td><input type="text" style="width: 18px;" value="<?=$qcoFleet->hour_23?>"></td>
+                        </tr>
+                      </table>
+                    <?}}?>
+                  </div>
+                </div>
+              </div>
+              <?}?>
+            </div>
+					</div>
+				</div><br>
+				<button class="btn btn-lg btn-success" data-toggle="modal" data-target="#acceptQH"><i class="fa fa-thumbs-up"></i></button>
+				<button class="btn btn-lg btn-danger" data-toggle="modal" data-target="#rejectQH"><i class="fa fa-thumbs-down"></i></button>
+    	</div>
+  	</div>
+	</div>
+</div>
+
+<form action="/qco/accept-qh" method="post">
+  <div class="modal fade" id="acceptQH" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Aceitar QH</h4>
+        </div>
+        <div class="modal-body">
+          <p>Tem certeza que deseja aceitar o novo quadro de horário? Será gerado um novo QCO com os novos horários.</p>
+        </div>
+        <div class="modal-footer">
+					<input type="hidden" value='<?=$this->serializedQh?>' name="serializedQh">
+          <input type="hidden" name="qcoId" value="<?=$this->qcoId?>">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+          <button type="submit" class="btn btn-success">Aceitar</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</form>
+
+<form action="/qco/reject-qh" method="post">
+  <div class="modal fade" id="rejectQH" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Rejeitar QH</h4>
+        </div>
+        <div class="modal-body">
+          <p>Tem certeza que deseja rejeitar o novo quadro de horário?</p>
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" name="qcoId" value="<?=$this->qcoId?>">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+          <a href="/qco/edit/id/<?=$this->qcoId?>" class="btn btn-danger">Rejeitar</a>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</form>
+
