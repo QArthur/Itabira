@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 class FleetController extends Zend_Controller_Action
 {
@@ -899,16 +899,19 @@ class FleetController extends Zend_Controller_Action
     public function acceptDownAction()
     {
       try{ 
+
         $this->_helper->layout()->setLayout('ajax');
         $vehicle = new Application_Model_Vehicle();        
         if ( $this->getRequest()->isPost() ) 
         {
           $data = $this->getRequest()->getPost();
           $vehicle->reviewAcceptDown($data['id']);
+          $vehicle->Down($data['id']);
           $this->redirect('/fleet/review-down');
         }
       }
       catch(Zend_Exception $e){
+          
         $this->redirect('/fleet/view/save/failed');
       }
     }
@@ -916,10 +919,11 @@ class FleetController extends Zend_Controller_Action
     public function denyDownAction()
     {
       try{ 
+          
         $this->_helper->layout()->setLayout('ajax');
         $vehicle = new Application_Model_Vehicle();        
         if ( $this->getRequest()->isPost() ) 
-        {
+        {         
           $data = $this->getRequest()->getPost();
           $vehicle->reviewDenyDown($data['id']);
           $this->redirect('/fleet/review-down');

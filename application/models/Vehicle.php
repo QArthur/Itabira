@@ -1200,6 +1200,10 @@ class Application_Model_Vehicle
 			$vehicleStatus = new Application_Model_DbTable_VehicleStatus();
 			$vehicleStatusRow = $vehicleStatus->fetchRow($vehicleStatus->select()->where('vehicle_id = ?',$vehicleId));
 			$vehicleStatusRow->status = $status;
+                        if($status==7)
+                        {
+                            $this->down($vehicleId);
+                        }
 			return $vehicleStatusRow->save();
 		}
 	}
@@ -1926,8 +1930,8 @@ class Application_Model_Vehicle
 	public function reviewAcceptDown($vehicleId)
 	{
 		$this->changeStatus($vehicleId,7);
-		$vehicleHistoric = new Application_Model_DbTable_VehicleHistoric();
-		/* Data de baixa deve ir pro DER
+		/* $vehicleHistoric = new Application_Model_DbTable_VehicleHistoric();
+		Data de baixa deve ir pro DER
 		$vehicleHistoricRow = $vehicleHistoric->fetchRow($vehicleHistoric->select()->where('vehicle_id = ?',$vehicleId)->where('end_historic_date IS NULL'));
 		if($vehicleHistoricRow)
 		{
@@ -1943,7 +1947,7 @@ class Application_Model_Vehicle
 	*	@access public
 	*	@return null
 	*/
-	public function denyAcceptDown($vehicleId)
+	public function reviewDenyDown($vehicleId)
 	{
 		$this->changeStatus($vehicleId,4);
 	}

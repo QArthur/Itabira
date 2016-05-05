@@ -69,22 +69,26 @@ class Application_Model_Inspection
 		$select	->from(array('v' => 'vehicle'),array('start_date' => new Zend_Db_Expr ('DATE_FORMAT(start_date,"%d/%m/%Y")'),
 																						'service', 'plate', 'renavam', 'pattern', 'color', 'type', 'floor', 'id') )
 						->joinLeft(array('m' => 'vehicle_status'),'m.vehicle_id=v.id',array('status'))
+                                                ->joinLeft(array('vh' => 'vehicle_historic'),'vh.vehicle_id=v.id')
+                                                ->where('vh.end_historic_date IS NULL')
 						->where('m.status = 7');
 		return $vehicle->fetchAll($select);
+                
 	}
 
 	public function acceptDown($vehicleId)
 	{
 		$vehicle = new Application_Model_DbTable_VehicleHistoric();
 		$vehicleRow = $vehicle->fetchRow($vehicle->select()->where('vehicle_id = ?',$vehicleId)->where('end_historic_date IS NULL'));
-		if($vehicleRow)
+                if($vehicleRow)
 		{
 			$vehicle = new Application_Model_Vehicle();
 			$vehicle->changeStatus($vehicleId,6);
 
 			$vehicleDown = new Application_Model_DbTable_VehicleDown();
 			$vehicleDownRow = $vehicleDown->fetchRow($vehicleDown->select()->where('vehicle_id = ?',$vehicleId)->where('status = 1'));
-			if($vehicleDownRow)
+
+                        if($vehicleDownRow)
 			{
 				$vehicleDownRow->status = 0;
 				$vehicleDownRow->save();

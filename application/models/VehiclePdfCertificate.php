@@ -60,11 +60,14 @@ class Application_Model_VehiclePdfCertificate
     $this->page->setLineWidth(0.5)
         ->drawLine(470, 740, 470, 820);
 
-    $this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),13)
+    $this->page     ->setFillColor(new Zend_Pdf_Color_Rgb(0, 0, 0))
+                    ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),13)
                     ->drawText('AUTORIZAÇÃO DE TRÁFEGO', 200, 790, 'UTF-8');
-    $this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),13)
+    $this->page     ->setFillColor(new Zend_Pdf_Color_Rgb(0, 0, 0))
+                    ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),13)
                     ->drawText('PARA VEÍCULOS DO TRANSPORTE', 185, 775, 'UTF-8');
-    $this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),13)
+    $this->page     ->setFillColor(new Zend_Pdf_Color_Rgb(0, 0, 0))
+                    ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),13)
                     ->drawText('COLETIVO DE PASSAGEIROS', 200, 760, 'UTF-8');
         
     //$this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES),9)
@@ -142,20 +145,23 @@ class Application_Model_VehiclePdfCertificate
         
         $this->page->setLineWidth(2)
             ->drawLine(50, $relative +  600, 545 ,$relative +  600);
-        $this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),12)
+        $this->page   ->setFillColor(new Zend_Pdf_Color_Rgb(0, 0, 0))  
+                      ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),12)
                       ->drawText('AUTORIZAÇÃO :', 55, $relative + 607, 'UTF-8');     
         
-        $this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),12)
+        $this->page   ->setFillColor(new Zend_Pdf_Color_Rgb(0, 0, 0))  
+                      ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),12)
                       ->drawText($vehicleLastCRV->id, 180, $relative + 607, 'UTF-8'); 
         
-        $this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_ITALIC),10)
-                      ->drawText('ESTE VEÍCULO FOI VISTORIADO E ESTÁ AUTORIZADO A PRESTAR SERVIÇO DE', 60, $relative + 590, 'UTF-8');
-        $this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_ITALIC),10)
-                      ->drawText('TRANSPORTE COLETIVO DE PASSAGEIROS NO MUNICÍPIO DE ITABIRA-MG', 60, $relative + 578, 'UTF-8');
-        $this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_ITALIC),10)
-                      ->drawText('DESDE QUE MANTIDA AS CONDIÇÕES TÉCNICAS E MECÂNICAS CONFORME', 60, $relative + 566, 'UTF-8');
-        $this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_ITALIC),10)
-                      ->drawText('APROVADO EM INSPEÇÃO.', 60, $relative + 554, 'UTF-8');
+        $this->page   ->setFillColor(new Zend_Pdf_Color_Rgb(1, 0, 0))  
+                      ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_ITALIC),10)
+                      ->drawText('ESTE VEÍCULO FOI VISTORIADO E ESTÁ AUTORIZADO A PRESTAR SERVIÇO DE TRANSPORTE COLETIVO ', 60, $relative + 586, 'UTF-8');
+        $this->page   ->setFillColor(new Zend_Pdf_Color_Rgb(1, 0, 0)) 
+                      ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_ITALIC),10)
+                      ->drawText('DE PASSAGEIROS NO MUNICÍPIO DE ITABIRA-MG.', 60, $relative + 574, 'UTF-8');
+        $this->page   ->setFillColor(new Zend_Pdf_Color_Rgb(1, 0, 0))
+                      ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_ITALIC),10)
+                      ->drawText('DESDE QUE MANTIDA AS CONDIÇÕES TÉCNICAS E MECÂNICAS CONFORME APROVADO EM INSPEÇÃO.', 60, $relative + 562, 'UTF-8');
       //$this->page     ->setLineWidth(2)
       //                ->drawLine(51, $relative + 710, 544, $relative + 710);
       /*
@@ -220,7 +226,8 @@ class Application_Model_VehiclePdfCertificate
      * 
      */
         // Descrição
-        $this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),14)
+        $this->page     ->setFillColor(new Zend_Pdf_Color_Rgb(0, 0, 0))
+                        ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES_BOLD),14)
                         ->drawText('Nº da Licença', 75, $relative + 720, 'UTF-8');
 /*
         // TOP
@@ -536,7 +543,7 @@ class Application_Model_VehiclePdfCertificate
         
        
          $this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES),12)
-                        ->drawText($vehicleRow->start_date, 480, $relative + 690, 'UTF-8');
+                        ->drawText($vehicleRow->start_date, 450, $relative + 690, 'UTF-8');
          
         /*$this->page     ->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_TIMES),10)
                         ->drawText($bodyRow->name, 56, $relative +  616, 'UTF-8');

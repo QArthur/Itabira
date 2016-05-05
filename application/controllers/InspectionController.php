@@ -190,6 +190,7 @@ class InspectionController extends Zend_Controller_Action
     {
       if ( $this->getRequest()->isPost()) 
       {
+          
         $data = $this->getRequest()->getPost();
         $inspection = new Application_Model_Inspection();
         if($inspection->acceptDown($data['vehicle_id']))

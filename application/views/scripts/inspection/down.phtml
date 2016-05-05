@@ -29,11 +29,11 @@
             <?if(count($this->list)){
               foreach($this->list as $body){?>
                 <tr>
-                  <td><a href="/fleet/edit/id/<?=$body->id?>"><?=$body->plate?></a></td>
+                  <td><a href="/fleet/edit/id/<?=$body->vehicle_id?>"><?=$body->plate?></a></td>
                   <td><?=$body->renavam?></td>
                   <td>
-                  	<a href="#accept_<?=$body->id?>" class="btn btn-success btn-sm help" data-toggle="modal" title="" data-original-title="Aceitar baixa"><span class="glyphicon glyphicon-thumbs-up"></span></a>
-                  	<a href="#deny_<?=$body->id?>" class="btn btn-danger btn-sm help" data-toggle="modal" title="" data-original-title="Rejeitar baixa"><span class="glyphicon glyphicon-thumbs-down"></span></a>
+                  	<a href="#accept_<?=$body->vehicle_id?>" class="btn btn-success btn-sm help" data-toggle="modal" title="Aceitar baixa"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+                  	<a href="#deny_<?=$body->vehicle_id?>" class="btn btn-danger btn-sm help" data-toggle="modal" title="Rejeitar baixa"><span class="glyphicon glyphicon-thumbs-down"></span></a>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#block" class="btn btn-danger btn-sm help" data-toggle="modal" title="Bloquear veículo"><span class="glyphicon glyphicon-thumbs-down"></span></a>
                   	</td>
@@ -54,9 +54,9 @@
 
 
 <?if(count($this->list)){
-  foreach($this->list as $body){?>
+  foreach($this->list as $body){ ?>
   <form action="/inspection/accept-down" method="post">
-    <div class="modal fade" id="accept_<?=$body->id?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal fade" id="accept_<?=$body->vehicle_id?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -67,7 +67,7 @@
             <p>Tem certeza que deseja aceitar o pedido de baixa do veículo <strong><?=$body->plate?></strong>?</p>
           </div>
           <div class="modal-footer">
-            <input type="hidden" name="vehicle_id" value="<?=$body->id?>">
+            <input type="hidden" name="vehicle_id" value="<?=$body->vehicle_id?>">
             <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
             <button type="submit" class="btn btn-success">Aceitar baixa</button>
           </div>
@@ -77,7 +77,7 @@
   </form>
 
   <form action="/inspection/deny-down" method="post">
-    <div class="modal fade" id="deny_<?=$body->id?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deny_<?=$body->vehicle_id?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -88,7 +88,7 @@
             <p>Tem certeza que deseja rejeitar o pedido de baixa do veículo <strong><?=$body->plate?></strong>?</p>
           </div>
           <div class="modal-footer">
-            <input type="hidden" name="vehicle_id" value="<?=$body->id?>">
+            <input type="hidden" name="vehicle_id" value="<?=$body->vehicle_id?>">
             <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
             <button type="submit" class="btn btn-danger">Rejeitar baixa</button>
           </div>
@@ -110,7 +110,7 @@
             <h4>Tem certeza que deseja <b>bloquear</b> o veículo e enviá-lo para a SETOP?</h4>
           </div>
           <div class="modal-footer">
-            <input type="hidden" name="vehicleId" value="<?=$body->id?>">
+            <input type="hidden" name="vehicleId" value="<?=$body->vehicle_id?>">
             <input type="hidden" name="block" value="1">
             <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
             <button type="submit" class="btn btn-success">Salvar</button>
